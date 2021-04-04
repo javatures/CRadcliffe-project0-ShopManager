@@ -1,18 +1,24 @@
 package ShopManagerV2;
 
 public class Item {
-    String itemNumber;      
+    int id;
+    int jobNumber;
+    String itemNumber;
     String itemDescription;
     boolean taxable;
     float cost;
-    String itemID;          //Praimary key for Item table/foreign key for Job Table
-    
-    public Item(String itemNumber, String itemDescription, boolean taxable, float cost, String itemID) {
+    float quantity;
+
+    public Item(int id, int jobNumber, String itemNumber, String itemDescription, boolean taxable, float cost , float quantity) {
+        this.id = id;
+        this.jobNumber = jobNumber;
         this.itemNumber = itemNumber;
         this.itemDescription = itemDescription;
         this.taxable = taxable;
         this.cost = cost;
-        this.itemID = itemID;
+        this.quantity = quantity;
     }
+    
+
 
 }

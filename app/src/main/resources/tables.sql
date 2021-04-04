@@ -28,5 +28,6 @@ create table items (
     item_number text not null,
     item_description text,
     taxable boolean not null,
-    cost numeric (5, 2) not null check (cost > 0)
+    unit_cost numeric (5, 2) not null check (cost > 0)
+    quantity NUMERIC(3 , 2) not null check (cost > 0)
 );

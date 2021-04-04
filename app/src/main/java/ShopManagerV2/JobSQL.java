@@ -43,7 +43,7 @@ public class JobSQL implements TheWay<Job> {
     public void create(Job job) {
         // TODO Auto-generated method stub
         try {
-            PreparedStatement stevejr = steve.prepareStatement("Insert into jobs (customer_id , car_id , invoiced, paid , taxable, items) values(? , ? , ? , ? , ? , ? , ?)");
+            PreparedStatement stevejr = steve.prepareStatement("Insert into jobs (customer_id , car_id , invoiced, paid , taxable, items) values(? , ? , ? , ? , ? , ? )");
             stevejr.setInt(1, job.customerID);
             stevejr.setString(2, job.carVIN);
             stevejr.setBoolean(3, job.invoiced);
