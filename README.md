@@ -9,3 +9,9 @@ This Software is used for aiding in the procress of keeping track of customers, 
   - [x] Can Delete Database Entries
   - [x] Database can accept custom inputs for Queries that are only used for single functions
 - [x] System allows Foreign Key Modification without crashing
+
+## Future Features
+- Implement Inventory Control
+- Implement a GUI
+- Implement local save of the data in the tables
+- Implement Taxes Menu to allow updating of tax rate
