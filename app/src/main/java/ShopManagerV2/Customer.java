@@ -12,4 +12,11 @@ public class Customer {
         this.lName = lName;
         this.phoneNumber = phoneNumber;
     }
+
+    public void printCustomerInfo() {
+        System.out.println("Customer ID: " + this.id);
+        System.out.println("Customer Name: " + this.fName + " " + this.lName);
+        System.out.println("Customer Phone Number: " + this.phoneNumber);
+
+    }
 }

@@ -41,7 +41,7 @@ public class CarSQL  implements TheWay<Car>{
     @Override
     public void create(Car car) {
         try {
-            PreparedStatement stevejr = steve.prepareStatement("Insert into cars (? , ? , ? , ? , ? , ? , ?)");
+            PreparedStatement stevejr = steve.prepareStatement("Insert into cars values (? , ? , ? , ? , ? , ? , ?)");
             stevejr.setInt(1, car.OwnerID);
             stevejr.setString(2, car.year);
             stevejr.setString(3, car.make);
@@ -116,31 +116,31 @@ public class CarSQL  implements TheWay<Car>{
     }
     public List<Car> getFiltered(String value, int key){
         try {
-            PreparedStatement stevejr = steve.prepareStatement("select * from cars where ? = ?");
+            String sql = "select * from cars where ";
             switch (key){
                 case 1:
-                    stevejr.setString(1, "owner_id");
+                    sql = sql.concat("owner_id = " + Integer.parseInt(value));
                     break;
                 case 2:
-                    stevejr.setString(1, "year");
+                    sql = sql.concat("year = \'" + value + "\'");
                     break;
                 case 3:
-                    stevejr.setString(1, "make");
+                    sql = sql.concat("make = \'" + value + "\'");
                     break;
                 case 4:
-                    stevejr.setString(1, "model");
+                    sql = sql.concat("model = \'" + value + "\'");
                     break;
                 case 5:
-                    stevejr.setString(1, "license_plate_state");
+                    sql = sql.concat("vin = \'" + value + "\'");
                     break;
                 case 6:
-                    stevejr.setString(1, "license_plate_number");
+                    sql = sql.concat("licence_plate_state = \'" + value + "\'");
                     break;
                 case 7:
-                    stevejr.setString(1, "vin");
+                    sql = sql.concat("licence_plate_number = \'" + value + "\'");
                     break;
-            }            
-            stevejr.setString(2, value);
+            }
+            PreparedStatement stevejr = steve.prepareStatement(sql);
             ResultSet results = stevejr.executeQuery();
             
             List<Car> cars = new ArrayList<Car>();
@@ -160,6 +160,17 @@ public class CarSQL  implements TheWay<Car>{
         }
         return null;
     }
+
+    public ResultSet customQuery(String sql) throws SQLException {
+        PreparedStatement stevejr = steve.prepareStatement(sql);
+        return stevejr.executeQuery();
+    }
+
+    public void customUpdate(String sql) throws SQLException {
+        PreparedStatement stevejr = steve.prepareStatement(sql);
+        stevejr.executeUpdate();
+    }
+
     
     
 }

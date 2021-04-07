@@ -39,32 +39,32 @@ public class ItemsSQL implements TheWay<Item> {
                 PreparedStatement stevejr = steve.prepareStatement("update items set ? = ? where id = ?");
                 switch (key){
                     case 1:
-                        stevejr.setString(1, "job_id");
-                        stevejr.setInt(2, e.jobNumber);
+                        stevejr= steve.prepareStatement("update items set job_number = ? where id = ?");
+                        stevejr.setInt(1, e.jobNumber);
                         break;
                     case 2:
-                        stevejr.setString(1, "item_number");
-                        stevejr.setString(2, e.itemNumber);
+                        stevejr= steve.prepareStatement("update items set item_number = ? where id = ?");
+                        stevejr.setString(1, e.itemNumber);
                         break;
                     case 3:
-                        stevejr.setString(1, "item_description");
-                        stevejr.setString(2, e.itemDescription);
+                        stevejr= steve.prepareStatement("update items set item_description = ? where id = ?");
+                        stevejr.setString(1, e.itemDescription);
                         break;
                     case 4:
-                        stevejr.setString(1, "taxable");
-                        stevejr.setBoolean(2, e.taxable);
+                        stevejr= steve.prepareStatement("update items set taxable = ? where id = ?");
+                        stevejr.setBoolean(1, e.taxable);
                         break;
                     case 5:
-                        stevejr.setString(1, "unit_cost");
-                        stevejr.setFloat(2, e.cost);
+                        stevejr= steve.prepareStatement("update items set unit_cost = ? where id = ?");
+                        stevejr.setFloat(1, e.cost);
                         break;
                     case 6:
-                        stevejr.setString(1, "quantity");
-                        stevejr.setFloat(2, e.quantity);
+                        stevejr = steve.prepareStatement("update items set quantity = ? where id = ?");
+                        stevejr.setFloat(1, e.quantity);
                         break;
     
                 }
-                stevejr.setInt(3, e.id);
+                stevejr.setInt(2, e.id);
                 stevejr.executeUpdate();
                 
             } catch (SQLException e1) {
@@ -116,28 +116,34 @@ public class ItemsSQL implements TheWay<Item> {
             PreparedStatement stevejr = steve.prepareStatement("select * from items where ? = ?");
             switch (key){
                 case 1:
-                    stevejr.setString(1, "id");
+                    stevejr = steve.prepareStatement("select * from items where id = ?");
+                    stevejr.setInt(1, Integer.parseInt(value));
                     break;
                 case 2:
-                    stevejr.setString(1, "job_id");
+                    stevejr = steve.prepareStatement("select * from items where job_id = ?");
+                    stevejr.setInt(1, Integer.parseInt(value));
                     break;
                 case 3:
-                    stevejr.setString(1, "item_number");
+                    stevejr = steve.prepareStatement("select * from items where item_number = ?");
+                    stevejr.setString(1, value);
                     break;
                 case 4:
-                    stevejr.setString(1, "item_description");
+                    stevejr = steve.prepareStatement("select * from items where item_description = ?");
+                    stevejr.setString(1 , value);
                     break;
                 case 5:
-                    stevejr.setString(1, "taxable");
+                    stevejr = steve.prepareStatement("select * from items where taxable = ?");
+                    stevejr.setBoolean(1, Boolean.parseBoolean(value));
                     break;
                 case 6:
-                    stevejr.setString(1, "unit_cost");
+                    stevejr = steve.prepareStatement("select * from items where unit_cost = ?");
+                    stevejr.setFloat(1, Float.parseFloat(value));
                     break;
                 case 7:
-                    stevejr.setString(1, "quantity");
+                    stevejr = steve.prepareStatement("select * from items where quantity = ?");
+                    stevejr.setFloat(1, Float.parseFloat(value));
                     break;
             }            
-            stevejr.setString(2, value);
             ResultSet results = stevejr.executeQuery();
             List<Item> items = new ArrayList<Item>();
             while(results.next()){

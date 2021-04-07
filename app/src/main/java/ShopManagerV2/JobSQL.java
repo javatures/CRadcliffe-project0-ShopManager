@@ -18,7 +18,7 @@ public class JobSQL implements TheWay<Job> {
         // TODO Auto-generated method stub
         try {
             Statement stevejr = steve.createStatement();
-            ResultSet results = stevejr.executeQuery("select * from jobs");
+            ResultSet results = stevejr.executeQuery("select * from jobs order by job_number");
             List<Job> jobs = new ArrayList<Job>();
             while(results.next()){
                 //public Job(int customerID, String carID, String jobNumber, boolean invoiced, boolean paid, boolean taxable, ArrayList<Integer> items)
@@ -27,8 +27,7 @@ public class JobSQL implements TheWay<Job> {
                                 results.getInt("job_number"), 
                                 results.getBoolean("invoiced"), 
                                 results.getBoolean("paid"), 
-                                results.getBoolean("taxable"), 
-                                results.getString("items")));
+                                results.getBoolean("taxable")));
             }
             return jobs;
         } catch (SQLException e) {
@@ -43,13 +42,12 @@ public class JobSQL implements TheWay<Job> {
     public void create(Job job) {
         // TODO Auto-generated method stub
         try {
-            PreparedStatement stevejr = steve.prepareStatement("Insert into jobs (customer_id , car_id , invoiced, paid , taxable, items) values(? , ? , ? , ? , ? , ? )");
+            PreparedStatement stevejr = steve.prepareStatement("Insert into jobs (customer_id , car_id , invoiced, paid , taxable) values(? , ? , ? , ? , ? )");
             stevejr.setInt(1, job.customerID);
             stevejr.setString(2, job.carVIN);
             stevejr.setBoolean(3, job.invoiced);
             stevejr.setBoolean(4, job.paid);
             stevejr.setBoolean(5, job.taxable);
-            stevejr.setString(6, job.prepareItemsForSQL());
             stevejr.executeUpdate();
             
         } catch (SQLException e1) {
@@ -62,37 +60,29 @@ public class JobSQL implements TheWay<Job> {
     @Override
     public void update(Job job, int key) {
         // TODO Auto-generated method stub
+        String sql = "update jobs set ";
         try {
-            PreparedStatement stevejr = steve.prepareStatement("update jobs set ? = ? where job_number = ?");
             switch (key){
                 case 1:
-                    stevejr.setString(1, "customer_id");
-                    stevejr.setInt(2, job.customerID);
+                    sql = sql.concat("customer_id = " + job.customerID);
                     break;
                 case 2:
-                    stevejr.setString(1, "car_id");
-                    stevejr.setString(2, job.carVIN);
+                    sql = sql.concat("car_id = " + job.carVIN);
                     break;
                 case 3:
-                    stevejr.setString(1, "invoiced");
-                    stevejr.setBoolean(2, job.invoiced);
+                    sql = sql.concat("invoiced = " + job.invoiced);
                     break;
                 case 4:
-                    stevejr.setString(1, "paid");
-                    stevejr.setBoolean(2, job.paid);
+                    sql = sql.concat("paid = " + job.paid);
                     break;
                 case 5:
-                    stevejr.setString(1, "taxable");
-                    stevejr.setBoolean(2, job.taxable);
+                    sql = sql.concat("taxable = " + job.customerID);
                     break;
-                case 6:
-                    stevejr.setString(1, "items");
-                    stevejr.setString(2, job.prepareItemsForSQL());
-                    break;
-
             }
-            stevejr.setInt(3, job.jobNumber);
+            sql = sql.concat(" where job_number =" + job.jobNumber);
+            PreparedStatement stevejr = steve.prepareStatement(sql);
             stevejr.executeUpdate();
+
             
         } catch (SQLException e1) {
             // TODO Auto-generated catch block
@@ -120,31 +110,30 @@ public class JobSQL implements TheWay<Job> {
 
     public List<Job> getFiltered(String value, int key){
         try {
-            PreparedStatement stevejr = steve.prepareStatement("select * from jobs where ? = ?");
+            String sql = "select * from jobs where";
+
+            
             switch (key){
                 case 1:
-                    stevejr.setString(1, "customer_id");
+                    sql = sql.concat(" customer_id = " + Integer.parseInt(value));
                     break;
                 case 2:
-                    stevejr.setString(1, "car_id");
+                    sql = sql.concat(" car_id = " + value);
                     break;
                 case 3:
-                    stevejr.setString(1, "job_number");
+                    sql = sql.concat(" job_number = " + Integer.parseInt(value));
                     break;
                 case 4:
-                    stevejr.setString(1, "invoiced");
+                    sql = sql.concat(" invoiced = " + Boolean.parseBoolean(value));
                     break;
                 case 5:
-                    stevejr.setString(1, "paid");
+                    sql = sql.concat(" paid = " + Boolean.parseBoolean(value));
                     break;
                 case 6:
-                    stevejr.setString(1, "taxable");
-                    break;
-                case 7:
-                    stevejr.setString(1, "items");
+                    sql = sql.concat(" taxable = " + Boolean.parseBoolean(value));
                     break;
             }            
-            stevejr.setString(2, value);
+            PreparedStatement stevejr = steve.prepareStatement(sql);
             ResultSet results = stevejr.executeQuery();
             List<Job> jobs = new ArrayList<Job>();
             while(results.next()){
@@ -154,13 +143,23 @@ public class JobSQL implements TheWay<Job> {
                                 results.getInt("job_number"), 
                                 results.getBoolean("invoiced"), 
                                 results.getBoolean("paid"), 
-                                results.getBoolean("taxable"), 
-                                results.getString("items")));
+                                results.getBoolean("taxable")));
             }
             
             return jobs;
         } catch (SQLException e) {
             //TODO: handle exception
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public ResultSet customQuery(String sql) {
+        PreparedStatement stevejr;
+        try {
+            stevejr = steve.prepareStatement(sql);
+            return stevejr.executeQuery();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;

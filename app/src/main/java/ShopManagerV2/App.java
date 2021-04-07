@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class App {
     public String getGreeting() {
@@ -19,24 +20,30 @@ public class App {
         String url = "jdbc:postgresql://localhost:5432/ShopManager";
         String username = "ShopManager";
         String password = "7SpotPontiac";
+        Scanner input = new Scanner(System.in);
 
         try{
             Connection steve = DriverManager.getConnection(url, username, password);
-            Statement stevejr = steve.createStatement();
-            int rowcount = stevejr.executeUpdate("insert into customers ( fname , lname , phone_number ) values ('Jeffery' , 'Lebowski' , '552-2433')");
-            System.out.println(rowcount + " Rows Affected");
-            
+            Navigator navi = new Navigator(input , steve);
 
+       
+            int menu = 0;
+            System.out.println(new App().getGreeting());
+
+            System.out.println("Building user interface...");
+
+            while(menu != 4){
+            UI.buildMenu(menu);
+            if(menu == 0)
+                menu = Integer.parseInt(input.nextLine());
+            else
+                menu = navi.submenu(menu);
+        
+    
+            }
         }catch(SQLException e){
             e.printStackTrace();
-        }
-
-
-        int menu = 0;
-        System.out.println(new App().getGreeting());
-
-        System.out.println("Building user interface...");
-        UI.buildMenu(menu);
+    }
         
 
     }

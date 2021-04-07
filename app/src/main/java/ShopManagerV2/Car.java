@@ -20,6 +20,11 @@ public class Car {
         this.licensePlate = lpN;
     }
 
+    @Override
+    public String toString() {
+        return year +  " " + make + " " + model + " " + state + " " + licensePlate;
+    }
+
  
 
 }

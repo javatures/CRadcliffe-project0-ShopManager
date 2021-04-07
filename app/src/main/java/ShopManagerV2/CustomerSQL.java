@@ -18,7 +18,7 @@ public class CustomerSQL implements TheWay<Customer>{
     public List<Customer> getAll() {
         try {
             Statement stevejr = steve.createStatement();
-            ResultSet results = stevejr.executeQuery("select * from customers");
+            ResultSet results = stevejr.executeQuery("select * from customers order by id");
             List<Customer> customers = new ArrayList<Customer>();
             while(results.next()){
                 customers.add(new Customer(results.getInt("id"), 
@@ -59,19 +59,19 @@ public class CustomerSQL implements TheWay<Customer>{
             PreparedStatement stevejr = steve.prepareStatement("update customers set ? = ? where id = ?");
             switch (key){
                 case 1:
-                    stevejr.setString(1, "fName");
-                    stevejr.setInt(2, cust.id);
+                    stevejr = steve.prepareStatement("update customers set fName=? where id=?");
+                    stevejr.setString(1 , cust.fName);
                     break;
                 case 2:
-                    stevejr.setString(1, "lName");
-                    stevejr.setString(2, cust.lName);
+                    stevejr = steve.prepareStatement("update customers set lName=? where id=?");
+                    stevejr.setString(1, cust.lName);
                     break;
                 case 3:
-                    stevejr.setString(1, "phone_number");
-                    stevejr.setString(2, cust.phoneNumber);
+                    stevejr= steve.prepareStatement("update customers set phone_number=? where id=?");
+                    stevejr.setString(1, cust.phoneNumber);
                     break;
             }
-            stevejr.setInt(3, cust.id);
+            stevejr.setInt(2, cust.id);
             stevejr.executeUpdate();
             
         } catch (SQLException e1) {
@@ -96,22 +96,69 @@ public class CustomerSQL implements TheWay<Customer>{
     }
     public List<Customer> getFiltered(String value, int key){
         try {
-            PreparedStatement stevejr = steve.prepareStatement("select * from customers where ? = ?");
+            PreparedStatement stevejr = steve.prepareStatement("select * from customers");
             switch (key){
                 case 1:
-                    stevejr.setString(1, "id");
+                    stevejr = steve.prepareStatement("select * from customers where id=?");
+                    stevejr.setInt(1, Integer.parseInt(value));
                     break;
                 case 2:
-                    stevejr.setString(1, "fName");
+                    stevejr = steve.prepareStatement("select * from customers where fName=?");
+                    stevejr.setString(1, value);
                     break;
                 case 3:
-                    stevejr.setString(1, "lName");
+                    stevejr = steve.prepareStatement("select * from customers where lName=?");
+                    stevejr.setString(1, value);
                     break;
                 case 4:
-                    stevejr.setString(1, "phone_number");
+                    stevejr = steve.prepareStatement("select * from customers where phone_number=?");
+                    stevejr.setString(1, value);
                     break;
             }            
-            stevejr.setString(2, value);
+            ResultSet results = stevejr.executeQuery();
+            
+            List<Customer> custs = new ArrayList<Customer>();
+            while(results.next()){
+                custs.add(new Customer(results.getInt("id"), 
+                results.getString("fName"), 
+                results.getString("lName"), 
+                results.getString("phone_number") 
+                ));
+            return custs;
+            }
+        } catch (SQLException e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Customer> getFiltered(String[] values, int[] keys) {
+        try {
+            System.out.println("Function not finished");
+            String sql = "";
+            sql.concat("select * from customers where ");
+            
+            for(int k : keys){
+            switch (k){
+                case 1:
+                    sql.concat("id = " + Integer.parseInt(values[k]) + " and ");
+                    break;
+                case 2:
+                    sql.concat("fName = " + values[k] + " and ");
+                    break;
+                case 3:
+                    sql.concat("lName = " + values[k] + " and ");
+                    break;
+                case 4:
+                    sql.concat("phone_number = " + values[k] + " and ");
+                    break;
+                }
+            }
+            sql = sql.substring(0, sql.length()-5);
+            PreparedStatement stevejr = steve.prepareStatement(sql);
+
+            
             ResultSet results = stevejr.executeQuery();
             
             List<Customer> custs = new ArrayList<Customer>();
